@@ -3,6 +3,7 @@ package game;
 import hawte.Game;
 import hawte.GameEngine;
 import hawte.Input;
+import hawte.Vector2d;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,17 +16,14 @@ import java.io.IOException;
 public class Main implements Game
 {
 	private BufferedImage image;
-	private int textX;
-	private int textY;
-
-	private int imageX;
-	private int imageY;
+	private Vector2d textPos;
+	private Vector2d imagePos;
 
 	@Override
 	public void init()
 	{
-		textX = 100;
-		textY = 100;
+		textPos = new Vector2d(50,100);
+		imagePos = new Vector2d(0,0);
 
 		try
 		{
@@ -41,19 +39,16 @@ public class Main implements Game
 	public void input(Input input)
 	{
 		if(input.getKey(KeyEvent.VK_UP))
-			textY--;
+			textPos.setY(textPos.getY() - 1);
 		if(input.getKey(KeyEvent.VK_DOWN))
-			textY++;
+			textPos.setY(textPos.getY() + 1);
 		if(input.getKey(KeyEvent.VK_LEFT))
-			textX--;
+			textPos.setX(textPos.getX() - 1);
 		if(input.getKey(KeyEvent.VK_RIGHT))
-			textX++;
+			textPos.setX(textPos.getX() + 1);
 
 		if(input.getMouse(MouseEvent.BUTTON1))
-		{
-			imageX = input.getMouseX();
-			imageY = input.getMouseY();
-		}
+			imagePos.set(input.getMouseX() - image.getWidth() / 2, input.getMouseY() - image.getHeight() / 2);
 	}
 
 	@Override
@@ -65,11 +60,11 @@ public class Main implements Game
 	@Override
 	public void render(Graphics g)
 	{
-		g.drawImage(image, imageX - image.getWidth() / 2, imageY - image.getHeight() / 2, null);
+		g.drawImage(image, (int)imagePos.getX(), (int)imagePos.getY(), null);
 
 		g.setColor(Color.BLUE);
 		g.setFont(new Font("Monospaced", 0, 100));
-		g.drawString("Hello World!", textX, textY);
+		g.drawString("Hello World!", (int)textPos.getX(), (int)textPos.getY());
 	}
 
 	public static void main(String[] args)
