@@ -7,6 +7,7 @@ import hawte.Input;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,9 @@ public class Main implements Game
 	private BufferedImage image;
 	private int textX;
 	private int textY;
+
+	private int imageX;
+	private int imageY;
 
 	@Override
 	public void init()
@@ -44,6 +48,12 @@ public class Main implements Game
 			textX--;
 		if(input.getKey(KeyEvent.VK_RIGHT))
 			textX++;
+
+		if(input.getMouse(MouseEvent.BUTTON1))
+		{
+			imageX = input.getMouseX();
+			imageY = input.getMouseY();
+		}
 	}
 
 	@Override
@@ -55,7 +65,7 @@ public class Main implements Game
 	@Override
 	public void render(Graphics g)
 	{
-		g.drawImage(image, 0,0, null);
+		g.drawImage(image, imageX - image.getWidth() / 2, imageY - image.getHeight() / 2, null);
 
 		g.setColor(Color.BLUE);
 		g.setFont(new Font("Monospaced", 0, 100));
