@@ -33,7 +33,7 @@ public class GameEngine extends Canvas
 		addMouseListener(input);
 		addMouseMotionListener(input);
 
-		game.updateEngineParameters(width, height, frameRate);
+		game.updateEngineParameters(width, height);
 	}
 
 	public JFrame createWindow(String title)

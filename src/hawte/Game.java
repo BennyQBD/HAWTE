@@ -12,11 +12,9 @@ public abstract class Game
 	private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	private int width;
 	private int height;
-	private double frameRate;
 
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
-	public double getFrameRate() { return frameRate; }
 
 	public abstract void init();
 
@@ -39,11 +37,10 @@ public abstract class Game
 	}
 
 	//TODO: At some point, make this scale with changes to the engine
-	public void updateEngineParameters(int width, int height, double frameRate)
+	public void updateEngineParameters(int width, int height)
 	{
 		this.width = width;
 		this.height = height;
-		this.frameRate = frameRate;
 	}
 
 	public void addObject(GameObject object)

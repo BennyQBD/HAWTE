@@ -1,26 +1,24 @@
-package game.pong;
+package game.pong.components;
 
 import hawte.Input;
+import hawte.Transform;
 
 import java.awt.event.KeyEvent;
 
 /**
  * Created by batman_2 on 12/18/13.
  */
-public class PongPlayer extends PongObject
+public class PongPlayer extends PongComponent
 {
 	public static final double SIZEX = 16;
 	public static final double SIZEY = SIZEX * 7;
 	public static final double MOVE_SPEED = 160;
 
-	public PongPlayer(double posX, double posY)
-	{
-		super(posX, posY, SIZEX, SIZEY);
-	}
-
 	private void move(double mag)
 	{
-		getTransform().getPos().setY(getTransform().getPos().getY() + mag );
+		Transform transform = getGameObject().getTransform();
+
+		transform.getPos().setY(transform.getPos().getY() + mag );
 	}
 
 	@Override

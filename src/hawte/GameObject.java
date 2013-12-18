@@ -1,22 +1,52 @@
 package hawte;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
- * Primary Game Object interface of HAWTE
+ * Primary Game Object of HAWTE
  */
-public abstract class GameObject
+public class GameObject
 {
+	private ArrayList<GameComponent> components;
 	private Transform transform;
 
 	public Transform getTransform() { return transform; }
 
 	public GameObject(Transform transform)
 	{
+		components = new ArrayList<GameComponent>();
 		this.transform = transform;
 	}
 
-	public abstract void input(Input input);
-	public abstract void update(double delta);
-	public abstract void render(Graphics g);
+	public GameObject(Transform transform, GameComponent component)
+	{
+		components = new ArrayList<GameComponent>();
+		this.transform = transform;
+		addComponent(component);
+	}
+
+	public void addComponent(GameComponent component)
+	{
+		component.init(this);
+		components.add(component);
+	}
+
+	public void input(Input input)
+	{
+		for(GameComponent component : components)
+			component.input(input);
+	}
+
+	public void update(double delta)
+	{
+		for(GameComponent component : components)
+			component.update(delta);
+	}
+
+	public void render(Graphics g)
+	{
+		for(GameComponent component : components)
+			component.render(g);
+	}
 }

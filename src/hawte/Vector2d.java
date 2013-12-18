@@ -102,6 +102,11 @@ public class Vector2d
 		return result.normalized().mul(amt);
 	}
 
+//	public Vector2d reflectComponent(Vector2d normal, double restitution)
+//	{
+//		return normal.mul(this.dot(normal)).mul(1 + restitution);
+//	}
+
 	public Vector2d rotate(double angle)
 	{
 		double cos = Math.cos(angle);
