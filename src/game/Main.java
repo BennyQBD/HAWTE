@@ -1,5 +1,6 @@
 package game;
 
+import game.pong.Pong;
 import hawte.Game;
 import hawte.GameEngine;
 import hawte.Input;
@@ -13,11 +14,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Main implements Game
+public class Main extends Game
 {
 	private BufferedImage image;
 	private Vector2d textPos;
 	private Vector2d imagePos;
+
+	public void initGame()
+	{
+
+	}
 
 	@Override
 	public void init()
@@ -69,8 +75,8 @@ public class Main implements Game
 
 	public static void main(String[] args)
 	{
-		GameEngine engine = new GameEngine(800, 600, 60, new Main());
-		engine.createWindow("My Game!");
+		GameEngine engine = new GameEngine(800, 600, 60, new Pong());
+		engine.createWindow("Pong");
 		engine.start();
 	}
 }

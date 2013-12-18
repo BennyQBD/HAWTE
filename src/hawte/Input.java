@@ -14,11 +14,18 @@ public class Input implements KeyListener, FocusListener, MouseListener, MouseMo
 	private boolean[] mouseButtons = new boolean[4];
 	private int mouseX = 0;
 	private int mouseY = 0;
+	private double delta = 0;
 
 	public boolean getKey(int key) { return keys[key]; }
 	public boolean getMouse(int button) { return mouseButtons[button]; }
 	public int getMouseX() { return mouseX; }
 	public int getMouseY() { return mouseY; }
+	public double getDelta() { return delta; }
+
+	public void update(double delta)
+	{
+		this.delta = delta;
+	}
 
 	public void mouseDragged(MouseEvent e)
 	{
