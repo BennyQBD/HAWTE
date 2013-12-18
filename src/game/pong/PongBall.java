@@ -17,11 +17,6 @@ public class PongBall extends PongObject
 	public PongBall(double posX, double posY)
 	{
 		super(posX, posY, SIZE, SIZE);
-	}
-
-	@Override
-	public void init()
-	{
 		velocity = new Vector2d(-MAX_SPEEDX, 0);
 	}
 
@@ -34,6 +29,6 @@ public class PongBall extends PongObject
 	@Override
 	public void update(double delta)
 	{
-		setPos(getPos().add(velocity.mul(delta)));
+		getTransform().setPos(getTransform().getPos().add(velocity.mul(delta)));
 	}
 }

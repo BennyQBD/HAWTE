@@ -1,6 +1,7 @@
 package game.pong;
 
 import hawte.GameObject;
+import hawte.Transform;
 import hawte.Vector2d;
 
 import java.awt.*;
@@ -10,26 +11,17 @@ import java.awt.*;
  */
 public abstract class PongObject extends GameObject
 {
-	private Vector2d pos;
-	private Vector2d size;
-
-	public Vector2d getPos() { return pos; }
-	public Vector2d getSize() { return size; }
-
-	public void setPos(Vector2d pos) { this.pos = pos; }
-	public void setSize(Vector2d size) { this.size = size; }
-
-	public double getCenterY() { return pos.getY() + size.getY() / 2; }
-
 	public PongObject(double posX, double posY, double sizeX, double sizeY)
 	{
-		pos = new Vector2d(posX, posY);
-		size = new Vector2d(sizeX, sizeY);
+		super(new Transform(new Vector2d(posX, posY), new Vector2d(sizeX, sizeY), 0));
 	}
 
 	@Override
 	public void render(Graphics g)
 	{
+		Vector2d pos = getTransform().getPos();
+		Vector2d size = getTransform().getSize();
+
 		//g.drawRoundRect((int) pos.getX(), (int) pos.getY(), (int) size.getX(), (int) size.getY(), (int)(size.getX() / 2), (int)(size.getX() / 2));
 		g.drawRect((int) pos.getX(), (int) pos.getY(), (int) size.getX(), (int) size.getY());
 	}

@@ -7,7 +7,15 @@ import java.awt.*;
  */
 public abstract class GameObject
 {
-	public abstract void init();
+	private Transform transform;
+
+	public Transform getTransform() { return transform; }
+
+	public GameObject(Transform transform)
+	{
+		this.transform = transform;
+	}
+
 	public abstract void input(Input input);
 	public abstract void update(double delta);
 	public abstract void render(Graphics g);

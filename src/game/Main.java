@@ -20,11 +20,6 @@ public class Main extends Game
 	private Vector2d textPos;
 	private Vector2d imagePos;
 
-	public void initGame()
-	{
-
-	}
-
 	@Override
 	public void init()
 	{

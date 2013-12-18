@@ -18,15 +18,9 @@ public class PongPlayer extends PongObject
 		super(posX, posY, SIZEX, SIZEY);
 	}
 
-	@Override
-	public void init()
-	{
-
-	}
-
 	private void move(double mag)
 	{
-		getPos().setY(getPos().getY() + mag );
+		getTransform().getPos().setY(getTransform().getPos().getY() + mag );
 	}
 
 	@Override

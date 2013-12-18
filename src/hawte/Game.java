@@ -18,15 +18,7 @@ public abstract class Game
 	public int getHeight() { return height; }
 	public double getFrameRate() { return frameRate; }
 
-	public abstract void initGame();
-
-	public void init()
-	{
-		initGame();
-
-		for(GameObject gameObject : gameObjects)
-			gameObject.init();
-	}
+	public abstract void init();
 
 	public void input(Input input)
 	{

@@ -104,9 +104,8 @@ public class Vector2d
 
 	public Vector2d rotate(double angle)
 	{
-		double rad = Math.toRadians(angle);
-		double cos = Math.cos(rad);
-		double sin = Math.sin(rad);
+		double cos = Math.cos(angle);
+		double sin = Math.sin(angle);
 
 		return new Vector2d(x * cos - y * sin, x * sin + y * cos);
 	}

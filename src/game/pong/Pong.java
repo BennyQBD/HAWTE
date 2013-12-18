@@ -8,7 +8,7 @@ import hawte.Game;
 public class Pong extends Game
 {
 	@Override
-	public void initGame()
+	public void init()
 	{
 		this.addObject(new PongBall(this.getWidth() / 2 - PongBall.SIZE / 2,
 									this.getHeight() / 2 - PongBall.SIZE / 2));
