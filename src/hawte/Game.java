@@ -1,7 +1,9 @@
 package hawte;
 
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * The primary game interface of HAWTE.
@@ -46,5 +48,134 @@ public abstract class Game
 	public void addObject(GameObject object)
 	{
 		gameObjects.add(object);
+	}
+
+	public void saveScene(String filePath)
+	{
+		ArrayList<String> outputStrings = new ArrayList<String>();
+
+		for(GameObject gameObject : gameObjects)
+		{
+			outputStrings.add("go " + gameObject.getTransform().toString());
+
+			for(int i = 0; i < gameObject.getNumComponents(); i++)
+			{
+				outputStrings.add("cmp " + gameObject.getComponent(i).getClass().getCanonicalName());
+			}
+		}
+
+		PrintWriter out = null;
+		try
+		{
+			out = new PrintWriter(new FileWriter(filePath));
+
+			for(String string : outputStrings)
+				out.println(string);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			out.close();
+		}
+	}
+
+	public void loadScene(String filePath)
+	{
+		gameObjects.clear();
+		Scanner scan = null;
+		try
+		{
+			scan = new Scanner(new File(filePath));
+
+			GameObject gameObject = null;
+			boolean readingTransform = false;
+			boolean readingComponents = false;
+			int transformReadPosition = 0;
+			while(scan.hasNext())
+			{
+				String token = scan.next();
+
+				if(token.equals("go"))
+				{
+					if(gameObject != null)
+						gameObjects.add(gameObject);
+
+					gameObject = new GameObject(new Transform(new Vector2d(0,0), new Vector2d(0,0), 0));
+					readingTransform = true;
+					readingComponents = false;
+					transformReadPosition = 0;
+					continue;
+				}
+
+				if(token.equals("cmp"))
+				{
+					readingTransform = false;
+					readingComponents = true;
+					continue;
+				}
+
+				if(readingComponents)
+				{
+					try
+					{
+						gameObject.addComponent((GameComponent)Class.forName(token).newInstance());
+					}
+					catch(InstantiationException e)
+					{
+						e.printStackTrace();
+					}
+					catch(IllegalAccessException e)
+					{
+						e.printStackTrace();
+					}
+					catch(ClassNotFoundException e)
+					{
+						e.printStackTrace();
+					}
+				}
+
+				if(readingTransform)
+				{
+					double value = Double.parseDouble(token);
+					Transform transform = gameObject.getTransform();
+
+					switch(transformReadPosition)
+					{
+						case 0:
+							transform.getPos().setX(value);
+							break;
+						case 1:
+							transform.getPos().setY(value);
+							break;
+						case 2:
+							transform.getSize().setX(value);
+							break;
+						case 3:
+							transform.getSize().setY(value);
+							break;
+						case 4:
+							transform.setRotation(value);
+							break;
+					}
+					transformReadPosition++;
+					if(transformReadPosition == 5)
+						readingTransform = false;
+				}
+			}
+
+			if(gameObject != null)
+				gameObjects.add(gameObject);
+		}
+		catch(FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			scan.close();
+		}
 	}
 }

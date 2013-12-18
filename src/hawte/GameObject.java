@@ -11,6 +11,8 @@ public class GameObject
 	private ArrayList<GameComponent> components;
 	private Transform transform;
 
+	public int getNumComponents() { return components.size(); }
+	public GameComponent getComponent(int index) { return components.get(index); }
 	public Transform getTransform() { return transform; }
 
 	public GameObject(Transform transform)

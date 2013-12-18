@@ -23,5 +23,9 @@ public class Pong extends Game
 		this.addObject(new GameObject(new Transform(new Vector2d(0, this.getHeight() / 2 - PongPlayer.SIZEY / 2),
 													new Vector2d(PongPlayer.SIZEX, PongPlayer.SIZEY), 0),
 									  new PongPlayer()));
+
+//		saveScene("./res/main.scn");
+//
+//		loadScene("./res/main.scn");
 	}
 }

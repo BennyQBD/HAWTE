@@ -33,4 +33,13 @@ public class Transform
 	{
 		return new Vector2d(pos.getX() + size.getX() / 2, pos.getY() + size.getY() / 2);
 	}
+
+	@Override
+	public String toString()
+	{
+		Vector2d pos = this.getPos();
+		Vector2d size = this.getSize();
+
+		return (pos.getX() + " " + pos.getY() + " " + size.getX() + " " + size.getY() + " " + rotation);
+	}
 }
