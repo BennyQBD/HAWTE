@@ -5,40 +5,49 @@ package hawte;
  */
 public class Transform
 {
-	private Vector2d pos;
-	private Vector2d size;
+	private Vector2d center;
+	private Vector2d halfWidths;
 	private double rotation;
 
-	public Vector2d getPos() { return pos; }
-	public Vector2d getSize() { return size; }
+	public Vector2d getCornerPos() { return center.sub(halfWidths); }
+	public Vector2d getFullSize() { return halfWidths.mul(2); }
+
+	public Vector2d getPos() { return center; }
+	public Vector2d getScale() { return halfWidths; }
 	public double getRotation() { return rotation; }
 
-	public void setPos(Vector2d pos) { this.pos = pos; }
-	public void setSize(Vector2d size) { this.size = size; }
+	public void setPos(Vector2d center) { this.center = center; }
+	public void setScale(Vector2d scale) { this.halfWidths = scale; }
 	public void setRotation(double rotation) { this.rotation = rotation; }
 
-	public Transform(Vector2d pos, Vector2d size, double rotation)
+	public Transform(Vector2d center, Vector2d halfWidths, double rotation)
 	{
-		this.pos = pos;
-		this.size = size;
+		this.center = center;
+		this.halfWidths = halfWidths;
 		this.rotation = rotation;
 	}
 
-	public Vector2d getTransformedPosition()
+	public Contact checkBoxCollision(Transform collider)
 	{
-		return pos.rotate(rotation);
-	}
+		Vector2d distance = collider.getPos().sub(center).abs();
+		distance = distance.sub(collider.getScale().add(halfWidths));
 
-	public Vector2d getCenter()
-	{
-		return new Vector2d(pos.getX() + size.getX() / 2, pos.getY() + size.getY() / 2);
+		if(distance.getX() < 0 && distance.getY() < 0)
+		{
+			if(distance.getX() > distance.getY())
+				return new Contact(new Vector2d(distance.getX(), 0));
+			else
+				return new Contact(new Vector2d(0, distance.getY()));
+		}
+
+		return null;
 	}
 
 	@Override
 	public String toString()
 	{
 		Vector2d pos = this.getPos();
-		Vector2d size = this.getSize();
+		Vector2d size = this.getScale();
 
 		return (pos.getX() + " " + pos.getY() + " " + size.getX() + " " + size.getY() + " " + rotation);
 	}

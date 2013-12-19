@@ -16,7 +16,7 @@ public abstract class GameComponent
 		this.object = parent;
 	}
 
-	public abstract void input(Input input);
-	public abstract void update(double delta);
-	public abstract void render(Graphics g);
+	public void input(Input input) {}
+	public void update(double delta) {}
+	public void render(Graphics g) {}
 }

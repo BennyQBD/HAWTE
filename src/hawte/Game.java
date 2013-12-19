@@ -30,6 +30,49 @@ public abstract class Game
 	{
 		for(GameObject gameObject : gameObjects)
 			gameObject.update(delta);
+
+
+		//Update physics simulation. Possibly move this to other method/class
+		ArrayList<PhysicsComponent> physicsComponents = new ArrayList<PhysicsComponent>();
+
+		for(GameObject gameObject : gameObjects)
+		{
+			for(int i = 0; i < gameObject.getNumComponents(); i++)
+			{
+				PhysicsComponent component;
+
+				if(gameObject.getComponent(i) instanceof PhysicsComponent)
+					component = (PhysicsComponent)gameObject.getComponent(i);
+				else
+					continue;
+
+				component.integrate(delta);
+				physicsComponents.add(component);
+			}
+		}
+
+		for(int i = 0; i < physicsComponents.size(); i++)
+		{
+			PhysicsComponent component1 = physicsComponents.get(i);
+			for(int j = i + 1; j < physicsComponents.size(); j++)
+			{
+				PhysicsComponent component2 = physicsComponents.get(j);
+
+//				if(component1 == component2)
+//					continue;
+
+				Transform transform1 = component1.getGameObject().getTransform();
+				Transform transform2 = component2.getGameObject().getTransform();
+
+				Contact contact = transform1.checkBoxCollision(transform2);
+
+				if(contact != null)
+				{
+					component1.onCollision(contact);
+					component2.onCollision(contact);
+				}
+			}
+		}
 	}
 
 	public void render(Graphics g)
@@ -151,10 +194,10 @@ public abstract class Game
 							transform.getPos().setY(value);
 							break;
 						case 2:
-							transform.getSize().setX(value);
+							transform.getScale().setX(value);
 							break;
 						case 3:
-							transform.getSize().setY(value);
+							transform.getScale().setY(value);
 							break;
 						case 4:
 							transform.setRotation(value);

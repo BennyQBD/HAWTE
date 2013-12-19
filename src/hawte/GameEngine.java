@@ -120,7 +120,7 @@ public class GameEngine extends Canvas
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null)
 		{
-			createBufferStrategy(2);
+			createBufferStrategy(3);
 			return;
 		}
 

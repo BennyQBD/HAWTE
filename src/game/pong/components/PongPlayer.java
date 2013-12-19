@@ -29,10 +29,4 @@ public class PongPlayer extends PongComponent
 		if(input.getKey(KeyEvent.VK_S) || input.getKey(KeyEvent.VK_DOWN))
 			this.move(MOVE_SPEED * input.getDelta());
 	}
-
-	@Override
-	public void update(double delta)
-	{
-
-	}
 }
