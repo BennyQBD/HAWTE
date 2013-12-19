@@ -14,6 +14,7 @@ public class PongBall extends PongComponent
 	public static final double MAX_SPEEDX = 160;
 	public static final int FONT_SIZE = 100;
 	public static final int FONT_OFFSET_CONSTANT = (int)(FONT_SIZE * 0.6);
+	public static final double BALL_CATCH_SCALE = 0.25;
 
 	private Vector2d initialPosition;
 	private Font scoreFont;
@@ -52,6 +53,29 @@ public class PongBall extends PongComponent
 			initState(-1.0);
 		else if(transform.getPos().getX() < 0)
 			initState(1.0);
+
+		keepBallFromGlitchingPastTheWalls();
+	}
+
+	private void keepBallFromGlitchingPastTheWalls()
+	{
+		Transform transform = getGameObject().getTransform();
+		Game game = getGameObject().getGame();
+
+		//Catch the ball if it's out of screen
+		if(transform.getPos().getY() > (game.getHeight() * (1.0 + BALL_CATCH_SCALE)) || transform.getPos().getY() < -game.getHeight() * BALL_CATCH_SCALE)
+		{
+			double initAmt = 1.0;
+			int lastPlayerScore = playerScore;
+			int lastEnemyScore = enemyScore;
+
+			if(getVelocity().getX() < 0)
+				initAmt *= -1;
+
+			initState(initAmt);
+			playerScore = lastPlayerScore;
+			enemyScore = lastEnemyScore;
+		}
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class PongEnemy extends PongPaddle
 	public static final double DAMPING = 0.25;
 	public static final double AI_MOVE_SPEED = MOVE_SPEED * 1.5;
 
-	private GameObject ball;
+	private PongBall ball;
 
 	@Override
 	public void update(double delta)
@@ -20,23 +20,33 @@ public class PongEnemy extends PongPaddle
 		if(ball == null)
 		{
 			GameComponent[] components = getGameObject().getGame().findComponents(PongBall.class);
-			ball = components[0].getGameObject();
+			ball = (PongBall)components[0];
 		}
 
 		Vector2d directionToBall = ball.getTransform().getPos().sub(getTransform().getPos());
 
-//		double distance = directionToBall.length();
-//		if(distance < 0)
-//			distance = 0.0001;
-		double acceleration = directionToBall.getY() * DAMPING; /// (distance * DAMPING);
-
-		getVelocity().incY(acceleration);
+		if(Math.abs(directionToBall.getY()) > delta * 10)
+		{
+			if(directionToBall.getY() > 0)
+				getVelocity().setY(AI_MOVE_SPEED);
+			else
+				getVelocity().setY(-AI_MOVE_SPEED);
+		}
+		else
+			getVelocity().setY(ball.getVelocity().getY());
 
 		if(getVelocity().getY() > AI_MOVE_SPEED)
 			getVelocity().setY(AI_MOVE_SPEED);
 		else if(getVelocity().getY() < -AI_MOVE_SPEED)
 			getVelocity().setY(-AI_MOVE_SPEED);
 
-		//getGameObject().getTransform().getPos().setY(ball.getTransform().getPos().getY());
+//		double acceleration = directionToBall.getY() * DAMPING;
+//
+//		getVelocity().incY(acceleration);
+//
+//		if(getVelocity().getY() > AI_MOVE_SPEED)
+//			getVelocity().setY(AI_MOVE_SPEED);
+//		else if(getVelocity().getY() < -AI_MOVE_SPEED)
+//			getVelocity().setY(-AI_MOVE_SPEED);
 	}
 }
