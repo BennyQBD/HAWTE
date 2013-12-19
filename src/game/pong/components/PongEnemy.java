@@ -10,7 +10,7 @@ import hawte.Vector2d;
 public class PongEnemy extends PongPaddle
 {
 	public static final double DAMPING = 0.25;
-	public static final double AI_MOVE_SPEED = MOVE_SPEED * 1.5;
+	public static final double AI_MOVE_SPEED = MOVE_SPEED * 1.3;
 
 	private PongBall ball;
 

@@ -2,6 +2,7 @@ package game.pong.components;
 
 import hawte.*;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 
 /**
@@ -15,11 +16,16 @@ public class PongBall extends PongComponent
 	public static final int FONT_SIZE = 100;
 	public static final int FONT_OFFSET_CONSTANT = (int)(FONT_SIZE * 0.6);
 	public static final double BALL_CATCH_SCALE = 0.25;
+	public static final double SPEED_CHANGE_ON_BOUNCE = 1.05;
 
 	private Vector2d initialPosition;
 	private Font scoreFont;
 	private int playerScore;
 	private int enemyScore;
+
+	private Clip hitPaddleSound;
+	private Clip hitWallSound;
+	private Clip resetSound;
 
 	private void initState(double amt)
 	{
@@ -31,6 +37,8 @@ public class PongBall extends PongComponent
 			playerScore++;
 		else
 			enemyScore++;
+
+		AudioUtil.playAudio(resetSound, 0);
 	}
 
 	@Override
@@ -38,6 +46,9 @@ public class PongBall extends PongComponent
 	{
 		super.init(gameObject);
 		initialPosition = new Vector2d(getGameObject().getTransform().getPos());
+		hitPaddleSound = AudioUtil.loadAudio("./res/pong/beep.wav");
+		hitWallSound = AudioUtil.loadAudio("./res/pong/plop.wav");
+		resetSound = AudioUtil.loadAudio("./res/pong/peep.wav");
 		initState(-1.0);
 		playerScore = 0;
 		enemyScore = 0;
@@ -99,6 +110,7 @@ public class PongBall extends PongComponent
 
 		if(collidedWith instanceof PongPlayer || collidedWith instanceof PongEnemy)
 		{
+			AudioUtil.playAudio(hitPaddleSound, 0);
 			Transform myTransform = getGameObject().getTransform();
 			Transform otherTransform = collidedWith.getGameObject().getTransform();
 
@@ -107,7 +119,9 @@ public class PongBall extends PongComponent
 
 			offsetAngle = 45 * difference;
 		}
+		else
+			AudioUtil.playAudio(hitWallSound, 0);
 
-		bounce(contact, 1.05, Math.toRadians(offsetAngle));
+		bounce(contact, SPEED_CHANGE_ON_BOUNCE, Math.toRadians(offsetAngle));
 	}
 }
