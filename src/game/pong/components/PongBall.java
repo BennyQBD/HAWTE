@@ -2,6 +2,8 @@ package game.pong.components;
 
 import hawte.*;
 
+import java.awt.*;
+
 /**
  * Created by batman_2 on 12/18/13.
  */
@@ -10,15 +12,24 @@ public class PongBall extends PongComponent
 	public static final int SIZEX = 16;
 	public static final int SIZEY = SIZEX;
 	public static final double MAX_SPEEDX = 160;
-	private static final double MAX_SPEEDY = MAX_SPEEDX * 2;
+	public static final int FONT_SIZE = 100;
+	public static final int FONT_OFFSET_CONSTANT = (int)(FONT_SIZE * 0.6);
 
 	private Vector2d initialPosition;
+	private Font scoreFont;
+	private int playerScore;
+	private int enemyScore;
 
 	private void initState(double amt)
 	{
 		getVelocity().setX(MAX_SPEEDX * amt);
 		getVelocity().setY(0);
 		getGameObject().getTransform().setPos(new Vector2d(initialPosition));
+
+		if(amt < 0)
+			playerScore++;
+		else
+			enemyScore++;
 	}
 
 	@Override
@@ -27,6 +38,8 @@ public class PongBall extends PongComponent
 		super.init(gameObject);
 		initialPosition = new Vector2d(getGameObject().getTransform().getPos());
 		initState(-1.0);
+		playerScore = 0;
+		enemyScore = 0;
 	}
 
 	@Override
@@ -39,6 +52,20 @@ public class PongBall extends PongComponent
 			initState(-1.0);
 		else if(transform.getPos().getX() < 0)
 			initState(1.0);
+	}
+
+	@Override
+	public void render(Graphics g)
+	{
+		if(scoreFont == null)
+			scoreFont = new Font("Monospaced", 0, FONT_SIZE);
+		g.setFont(scoreFont);
+
+		String scoreText = playerScore + " " + enemyScore;
+		//g.fillRect(getGameObject().getGame().getWidth() / 2 - 8, 0, 16, getGameObject().getGame().getHeight());
+		g.drawString(scoreText, getGameObject().getGame().getWidth() / 2 - (scoreText.length() * FONT_OFFSET_CONSTANT) / 2, 100);
+
+		super.render(g);
 	}
 
 	@Override
