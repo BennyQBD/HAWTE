@@ -10,21 +10,25 @@ public class GameObject
 {
 	private ArrayList<GameComponent> components;
 	private Transform transform;
+	private Game game;
 
+	public Game getGame() { return game; }
 	public int getNumComponents() { return components.size(); }
 	public GameComponent getComponent(int index) { return components.get(index); }
 	public Transform getTransform() { return transform; }
 
-	public GameObject(Transform transform)
+	public GameObject(Transform transform, Game game)
 	{
 		components = new ArrayList<GameComponent>();
 		this.transform = transform;
+		this.game = game;
 	}
 
-	public GameObject(Transform transform, GameComponent component)
+	public GameObject(Transform transform, GameComponent component, Game game)
 	{
 		components = new ArrayList<GameComponent>();
 		this.transform = transform;
+		this.game = game;
 		addComponent(component);
 	}
 

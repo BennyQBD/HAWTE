@@ -29,6 +29,12 @@ public class Vector2d
 	public Vector2d div(double r) { return new Vector2d(x / r, y / r); }
 	public Vector2d abs() { return new Vector2d(Math.abs(x), Math.abs(y)); }
 
+	public Vector2d(Vector2d init)
+	{
+		this.x = init.getX();
+		this.y = init.getY();
+	}
+
 	public Vector2d(double x, double y)
 	{
 		this.x = x;

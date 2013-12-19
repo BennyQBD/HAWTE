@@ -12,16 +12,51 @@ public class PongBall extends PongComponent
 	public static final double MAX_SPEEDX = 160;
 	private static final double MAX_SPEEDY = MAX_SPEEDX * 2;
 
+	private Vector2d initialPosition;
+
+	private void initState(double amt)
+	{
+		getVelocity().setX(MAX_SPEEDX * amt);
+		getVelocity().setY(0);
+		getGameObject().getTransform().setPos(new Vector2d(initialPosition));
+	}
+
 	@Override
 	public void init(GameObject gameObject)
 	{
 		super.init(gameObject);
-		getVelocity().setX(-MAX_SPEEDX);
+		initialPosition = new Vector2d(getGameObject().getTransform().getPos());
+		initState(-1.0);
 	}
 
 	@Override
-	public void onCollision(Contact contact)
+	public void update(double delta)
 	{
-		bounce(contact, 1.0, Math.toRadians(0));
+		Transform transform = getGameObject().getTransform();
+		Game game = getGameObject().getGame();
+
+		if(transform.getPos().getX() > game.getWidth())
+			initState(-1.0);
+		else if(transform.getPos().getX() < 0)
+			initState(1.0);
+	}
+
+	@Override
+	public void onCollision(Contact contact, PhysicsComponent collidedWith)
+	{
+		double offsetAngle = 0;
+
+		if(collidedWith instanceof PongPlayer)
+		{
+			Transform myTransform = getGameObject().getTransform();
+			Transform otherTransform = collidedWith.getGameObject().getTransform();
+
+			double difference = myTransform.getPos().getY() - otherTransform.getPos().getY();
+			difference /= (PongPlayer.SIZEY / 2);
+
+			offsetAngle = 45 * difference;
+		}
+
+		bounce(contact, 1.05, Math.toRadians(offsetAngle));
 	}
 }

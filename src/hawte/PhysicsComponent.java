@@ -17,7 +17,7 @@ public class PhysicsComponent extends GameComponent
 		transform.setPos(position.add(velocity.mul(delta)));
 	}
 
-	public void onCollision(Contact contact)
+	public void onCollision(Contact contact, PhysicsComponent collidedWith)
 	{
 
 	}
@@ -30,7 +30,7 @@ public class PhysicsComponent extends GameComponent
 		//transform.setPos(pos.sub(contact.getCollisionVector().mul(2)));
 
 		Vector2d newDirection = getVelocity().reflectComponent(contact.getCollisionVector().normalized(), restitution);
-		newDirection = getVelocity().sub(newDirection).rotate(-offsetAngle);
+		newDirection = getVelocity().sub(newDirection).rotate(offsetAngle);
 		getVelocity().set(newDirection.getX(), newDirection.getY());
 	}
 }

@@ -15,6 +15,24 @@ public abstract class Game
 	private int width;
 	private int height;
 
+	public GameComponent[] findComponents(Class<?> className)
+	{
+		ArrayList<GameComponent> result = new ArrayList<GameComponent>();
+
+		for(GameObject gameObject : gameObjects)
+		{
+			for(int i = 0; i < gameObject.getNumComponents(); i++)
+			{
+				GameComponent component = gameObject.getComponent(i);
+
+				if(component.getClass() == className)
+					result.add(component);
+			}
+		}
+
+		return result.toArray(new GameComponent[result.size()]);
+	}
+
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 
@@ -68,8 +86,8 @@ public abstract class Game
 
 				if(contact != null)
 				{
-					component1.onCollision(contact);
-					component2.onCollision(contact);
+					component1.onCollision(contact, component2);
+					component2.onCollision(contact, component1);
 				}
 			}
 		}
@@ -146,7 +164,7 @@ public abstract class Game
 					if(gameObject != null)
 						gameObjects.add(gameObject);
 
-					gameObject = new GameObject(new Transform(new Vector2d(0,0), new Vector2d(0,0), 0));
+					gameObject = new GameObject(new Transform(new Vector2d(0,0), new Vector2d(0,0), 0), this);
 					readingTransform = true;
 					readingComponents = false;
 					transformReadPosition = 0;
