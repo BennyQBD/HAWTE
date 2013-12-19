@@ -11,12 +11,6 @@ public class PongEnemy extends PongComponent
 	private GameObject ball;
 
 	@Override
-	public void init(GameObject gameObject)
-	{
-		super.init(gameObject);
-	}
-
-	@Override
 	public void update(double delta)
 	{
 		if(ball == null)

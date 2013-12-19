@@ -46,7 +46,7 @@ public class PongBall extends PongComponent
 	{
 		double offsetAngle = 0;
 
-		if(collidedWith instanceof PongPlayer)
+		if(collidedWith instanceof PongPlayer || collidedWith instanceof PongEnemy)
 		{
 			Transform myTransform = getGameObject().getTransform();
 			Transform otherTransform = collidedWith.getGameObject().getTransform();

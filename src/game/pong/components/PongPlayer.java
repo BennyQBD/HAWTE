@@ -1,6 +1,8 @@
 package game.pong.components;
 
+import hawte.Contact;
 import hawte.Input;
+import hawte.PhysicsComponent;
 import hawte.Transform;
 
 import java.awt.event.KeyEvent;
@@ -8,25 +10,16 @@ import java.awt.event.KeyEvent;
 /**
  * Created by batman_2 on 12/18/13.
  */
-public class PongPlayer extends PongComponent
+public class PongPlayer extends PongPaddle
 {
-	public static final double SIZEX = 16;
-	public static final double SIZEY = SIZEX * 7;
-	public static final double MOVE_SPEED = 160;
-
-	private void move(double mag)
-	{
-		Transform transform = getGameObject().getTransform();
-
-		transform.getPos().setY(transform.getPos().getY() + mag );
-	}
-
 	@Override
 	public void input(Input input)
 	{
+		getVelocity().set(0, 0);
+
 		if(input.getKey(KeyEvent.VK_W) || input.getKey(KeyEvent.VK_UP))
-			this.move(MOVE_SPEED * -input.getDelta());
+			getVelocity().incY(-MOVE_SPEED);
 		if(input.getKey(KeyEvent.VK_S) || input.getKey(KeyEvent.VK_DOWN))
-			this.move(MOVE_SPEED * input.getDelta());
+			getVelocity().incY(MOVE_SPEED);
 	}
 }

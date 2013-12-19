@@ -21,6 +21,9 @@ public class Vector2d
 	}
 	public void set(double x, double y) { this.x = x; this.y = y; }
 
+	public void incX(double amt) { x += amt; }
+	public void incY(double amt) { y += amt; }
+
 	public Vector2d add(Vector2d r) { return new Vector2d(x + r.getX(), y + r.getY()); }
 	public Vector2d add(double r) { return new Vector2d(x + r, y + r); }
 	public Vector2d sub(Vector2d r) { return new Vector2d(x - r.getX(), y - r.getY()); }

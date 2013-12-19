@@ -29,15 +29,25 @@ public class Transform
 
 	public Contact checkBoxCollision(Transform collider)
 	{
-		Vector2d distance = collider.getPos().sub(center).abs();
-		distance = distance.sub(collider.getScale().add(halfWidths));
+		Vector2d direction = collider.getPos().sub(center);
+		Vector2d distance = direction.abs().sub(collider.getScale().add(halfWidths));
 
 		if(distance.getX() < 0 && distance.getY() < 0)
 		{
 			if(distance.getX() > distance.getY())
-				return new Contact(new Vector2d(distance.getX(), 0));
+			{
+				if(direction.getX() < 0)
+					return new Contact(new Vector2d(distance.getX(), 0));
+				else
+					return new Contact(new Vector2d(-distance.getX(), 0));
+			}
 			else
-				return new Contact(new Vector2d(0, distance.getY()));
+			{
+				if(direction.getY() < 0)
+					return new Contact(new Vector2d(0, distance.getY()));
+				else
+					return new Contact(new Vector2d(0, -distance.getY()));
+			}
 		}
 
 		return null;

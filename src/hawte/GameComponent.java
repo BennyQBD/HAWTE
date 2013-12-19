@@ -9,6 +9,7 @@ public abstract class GameComponent
 {
 	private GameObject object;
 
+	public Transform getTransform() { return getGameObject().getTransform(); }
 	public GameObject getGameObject() { return object; }
 
 	public void init(GameObject parent)

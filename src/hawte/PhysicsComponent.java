@@ -27,7 +27,7 @@ public class PhysicsComponent extends GameComponent
 		Transform transform = getGameObject().getTransform();
 		Vector2d pos = transform.getPos();
 
-		//transform.setPos(pos.sub(contact.getCollisionVector().mul(2)));
+		transform.setPos(pos.sub(contact.getCollisionVector().mul(2)));
 
 		Vector2d newDirection = getVelocity().reflectComponent(contact.getCollisionVector().normalized(), restitution);
 		newDirection = getVelocity().sub(newDirection).rotate(offsetAngle);
