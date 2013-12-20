@@ -4,6 +4,7 @@ import hawte.*;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by batman_2 on 12/18/13.
@@ -12,11 +13,14 @@ public class PongBall extends PongComponent
 {
 	public static final int SIZEX = 16;
 	public static final int SIZEY = SIZEX;
-	public static final double MAX_SPEEDX = 160;
+	public static final double PACE_FACTOR = 1.75;
+	public static final double MAX_SPEEDX = 160 * PACE_FACTOR;
 	public static final int FONT_SIZE = 100;
 	public static final int FONT_OFFSET_CONSTANT = (int)(FONT_SIZE * 0.6);
 	public static final double BALL_CATCH_SCALE = 0.25;
 	public static final double SPEED_CHANGE_ON_BOUNCE = 1.05;
+	public static final double ERROR_FACTOR = 2 * PACE_FACTOR;
+	public static final int MAX_START_ANGLE = 10;
 
 	private Vector2d initialPosition;
 	private Font scoreFont;
@@ -39,6 +43,9 @@ public class PongBall extends PongComponent
 			enemyScore++;
 
 		AudioUtil.playAudio(resetSound, 0);
+
+		Random rand = new Random();
+		getVelocity().set(getVelocity().rotate(Math.toRadians(rand.nextInt(MAX_START_ANGLE * 2) - MAX_START_ANGLE)));
 	}
 
 	@Override
@@ -72,6 +79,20 @@ public class PongBall extends PongComponent
 	{
 		Transform transform = getGameObject().getTransform();
 		Game game = getGameObject().getGame();
+
+		if(Math.abs(getVelocity().getX()) < MAX_SPEEDX / ERROR_FACTOR)
+		{
+			double angle = Math.toRadians(10);
+
+			if(getVelocity().getX() < 0)
+			{
+				angle = -angle;
+				if(getVelocity().getY() > 0)
+					angle = -angle;
+			}
+
+			getVelocity().set(getVelocity().rotate(angle));
+		}
 
 		//Catch the ball if it's out of screen
 		if(transform.getPos().getY() > (game.getHeight() * (1.0 + BALL_CATCH_SCALE)) || transform.getPos().getY() < -game.getHeight() * BALL_CATCH_SCALE)

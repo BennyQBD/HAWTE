@@ -20,6 +20,7 @@ public class Vector2d
 		this.y = y;
 	}
 	public void set(double x, double y) { this.x = x; this.y = y; }
+	public void set(Vector2d xy) { this.x = xy.getX(); this.y = xy.getY(); }
 
 	public void incX(double amt) { x += amt; }
 	public void incY(double amt) { y += amt; }
