@@ -26,30 +26,30 @@ public class PongEnemy extends PongPaddle
 
 		if(ball.getVelocity().getX() < 0)
 		{
-			Vector2d directionToBall = ball.getTransform().getPos().sub(getTransform().getPos());
-
-			if(Math.abs(directionToBall.getY()) > delta * 10)
-			{
-				if(directionToBall.getY() > 0)
-					getVelocity().setY(AI_MOVE_SPEED);
-				else
-					getVelocity().setY(-AI_MOVE_SPEED);
-			}
-			else
-				getVelocity().setY(ball.getVelocity().getY());
-
-//			double centerPos = getGameObject().getGame().getHeight() / 2;
-//			double centerDifference = centerPos - getTransform().getPos().getY();
+//			Vector2d directionToBall = ball.getTransform().getPos().sub(getTransform().getPos());
 //
-//			if(Math.abs(centerDifference) > delta * FAULT_TOLERANCE_FACTOR)
+//			if(Math.abs(directionToBall.getY()) > delta * 10)
 //			{
-//				if(centerDifference > 0)
+//				if(directionToBall.getY() > 0)
 //					getVelocity().setY(AI_MOVE_SPEED);
 //				else
 //					getVelocity().setY(-AI_MOVE_SPEED);
 //			}
 //			else
-//				getVelocity().setY(0);
+//				getVelocity().setY(ball.getVelocity().getY());
+
+			double centerPos = getGameObject().getGame().getHeight() / 2;
+			double centerDifference = centerPos - getTransform().getPos().getY();
+
+			if(Math.abs(centerDifference) > delta * FAULT_TOLERANCE_FACTOR)
+			{
+				if(centerDifference > 0)
+					getVelocity().setY(AI_MOVE_SPEED);
+				else
+					getVelocity().setY(-AI_MOVE_SPEED);
+			}
+			else
+				getVelocity().setY(0);
 		}
 		else
 		{

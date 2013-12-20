@@ -70,7 +70,7 @@ public class Main extends Game
 
 	public static void main(String[] args)
 	{
-		GameEngine engine = new GameEngine(800, 600, 120, new Pong());
+		GameEngine engine = new GameEngine(800, 600, 60, new Pong());
 		engine.createWindow("Pong");
 		engine.start();
 	}

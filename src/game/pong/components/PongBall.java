@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Random;
 
 /**
- * Created by batman_2 on 12/18/13.
+ * The Pong Ball
  */
 public class PongBall extends PongComponent
 {
@@ -136,7 +136,7 @@ public class PongBall extends PongComponent
 			Transform otherTransform = collidedWith.getGameObject().getTransform();
 
 			double difference = myTransform.getPos().getY() - otherTransform.getPos().getY();
-			difference /= (PongPlayer.SIZEY / 2);
+			difference /= (PongPaddle.SIZEY / 2);
 
 			offsetAngle = 45 * difference;
 		}
