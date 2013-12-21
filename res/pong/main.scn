@@ -1,0 +1,12 @@
+go 0.0 0.0 0.0 0.0 0.0
+child
+go 400.0 300.0 8.0 8.0 0.0
+cmp game.pong.components.PongBall
+go 8.0 300.0 8.0 56.0 0.0
+cmp game.pong.components.PongPlayer
+go 792.0 300.0 8.0 56.0 0.0
+cmp game.pong.components.PongEnemy
+go 400.0 8.0 400.0 8.0 0.0
+cmp game.pong.components.PongWall
+go 400.0 592.0 400.0 8.0 0.0
+cmp game.pong.components.PongWall
