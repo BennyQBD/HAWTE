@@ -20,6 +20,11 @@ public class Transform
 	public void setScale(Vector2d scale) { this.halfWidths = scale; }
 	public void setRotation(double rotation) { this.rotation = rotation; }
 
+	public Transform()
+	{
+		this(new Vector2d(0,0), new Vector2d(0,0), 0);
+	}
+
 	public Transform(Vector2d center, Vector2d halfWidths, double rotation)
 	{
 		this.center = center;

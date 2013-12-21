@@ -11,26 +11,14 @@ import java.util.Scanner;
  */
 public abstract class Game
 {
-	private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	//private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	private GameObject rootObject = new GameObject(new Transform(new Vector2d(0,0), new Vector2d(0,0), 0), this);
 	private int width;
 	private int height;
 
-	public GameComponent[] findComponents(Class<?> className)
+	public GameComponent[] findAllComponents(Class<?> className)
 	{
-		ArrayList<GameComponent> result = new ArrayList<GameComponent>();
-
-		for(GameObject gameObject : gameObjects)
-		{
-			for(int i = 0; i < gameObject.getNumComponents(); i++)
-			{
-				GameComponent component = gameObject.getComponent(i);
-
-				if(component.getClass() == className)
-					result.add(component);
-			}
-		}
-
-		return result.toArray(new GameComponent[result.size()]);
+		return rootObject.findAllComponents(className);
 	}
 
 	public int getWidth() { return width; }
@@ -40,34 +28,37 @@ public abstract class Game
 
 	public void input(Input input)
 	{
-		for(GameObject gameObject : gameObjects)
-			gameObject.input(input);
+		rootObject.input(input);
+	}
+
+	private void addAndUpdatePhysicsComponents(GameObject object, ArrayList<PhysicsComponent> physicsComponents, double delta)
+	{
+		for(int i = 0; i < object.getNumComponents(); i++)
+		{
+			PhysicsComponent component;
+
+			if(object.getComponent(i) instanceof PhysicsComponent)
+				component = (PhysicsComponent)object.getComponent(i);
+			else
+				continue;
+
+			component.integrate(delta);
+			physicsComponents.add(component);
+		}
+
+		for(int i = 0; i < object.getNumChildren(); i++)
+			addAndUpdatePhysicsComponents(object.getChild(i), physicsComponents, delta);
 	}
 
 	public void update(double delta)
 	{
-		for(GameObject gameObject : gameObjects)
-			gameObject.update(delta);
+		rootObject.update(delta);
 
-
+		//TODO: Make this take into account all children
 		//Update physics simulation. Possibly move this to other method/class
 		ArrayList<PhysicsComponent> physicsComponents = new ArrayList<PhysicsComponent>();
 
-		for(GameObject gameObject : gameObjects)
-		{
-			for(int i = 0; i < gameObject.getNumComponents(); i++)
-			{
-				PhysicsComponent component;
-
-				if(gameObject.getComponent(i) instanceof PhysicsComponent)
-					component = (PhysicsComponent)gameObject.getComponent(i);
-				else
-					continue;
-
-				component.integrate(delta);
-				physicsComponents.add(component);
-			}
-		}
+		addAndUpdatePhysicsComponents(rootObject, physicsComponents, delta);
 
 		for(int i = 0; i < physicsComponents.size(); i++)
 		{
@@ -95,8 +86,7 @@ public abstract class Game
 
 	public void render(Graphics g)
 	{
-		for(GameObject gameObject : gameObjects)
-			gameObject.render(g);
+		rootObject.render(g);
 	}
 
 	//TODO: At some point, make this scale with changes to the engine
@@ -108,135 +98,16 @@ public abstract class Game
 
 	public void addObject(GameObject object)
 	{
-		gameObjects.add(object);
+		rootObject.addChild(object);
 	}
 
 	public void saveScene(String filePath)
 	{
-		ArrayList<String> outputStrings = new ArrayList<String>();
-
-		for(GameObject gameObject : gameObjects)
-		{
-			outputStrings.add("go " + gameObject.getTransform().toString());
-
-			for(int i = 0; i < gameObject.getNumComponents(); i++)
-			{
-				outputStrings.add("cmp " + gameObject.getComponent(i).getClass().getCanonicalName());
-			}
-		}
-
-		PrintWriter out = null;
-		try
-		{
-			out = new PrintWriter(new FileWriter(filePath));
-
-			for(String string : outputStrings)
-				out.println(string);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			out.close();
-		}
+		rootObject.saveScene(filePath);
 	}
 
 	public void loadScene(String filePath)
 	{
-		gameObjects.clear();
-		Scanner scan = null;
-		try
-		{
-			scan = new Scanner(new File(filePath));
-
-			GameObject gameObject = null;
-			boolean readingTransform = false;
-			boolean readingComponents = false;
-			int transformReadPosition = 0;
-			while(scan.hasNext())
-			{
-				String token = scan.next();
-
-				if(token.equals("go"))
-				{
-					if(gameObject != null)
-						gameObjects.add(gameObject);
-
-					gameObject = new GameObject(new Transform(new Vector2d(0,0), new Vector2d(0,0), 0), this);
-					readingTransform = true;
-					readingComponents = false;
-					transformReadPosition = 0;
-					continue;
-				}
-
-				if(token.equals("cmp"))
-				{
-					readingTransform = false;
-					readingComponents = true;
-					continue;
-				}
-
-				if(readingComponents)
-				{
-					try
-					{
-						gameObject.addComponent((GameComponent)Class.forName(token).newInstance());
-					}
-					catch(InstantiationException e)
-					{
-						e.printStackTrace();
-					}
-					catch(IllegalAccessException e)
-					{
-						e.printStackTrace();
-					}
-					catch(ClassNotFoundException e)
-					{
-						e.printStackTrace();
-					}
-				}
-
-				if(readingTransform)
-				{
-					double value = Double.parseDouble(token);
-					Transform transform = gameObject.getTransform();
-
-					switch(transformReadPosition)
-					{
-						case 0:
-							transform.getPos().setX(value);
-							break;
-						case 1:
-							transform.getPos().setY(value);
-							break;
-						case 2:
-							transform.getScale().setX(value);
-							break;
-						case 3:
-							transform.getScale().setY(value);
-							break;
-						case 4:
-							transform.setRotation(value);
-							break;
-					}
-					transformReadPosition++;
-					if(transformReadPosition == 5)
-						readingTransform = false;
-				}
-			}
-
-			if(gameObject != null)
-				gameObjects.add(gameObject);
-		}
-		catch(FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			scan.close();
-		}
+		rootObject.loadScene(filePath);
 	}
 }

@@ -19,7 +19,7 @@ public class PongEnemy extends PongPaddle
 	{
 		if(ball == null)
 		{
-			GameComponent[] components = getGameObject().getGame().findComponents(PongBall.class);
+			GameComponent[] components = getGameObject().getGame().findAllComponents(PongBall.class);
 			ball = (PongBall)components[0];
 			bounceSpace = getGameObject().getGame().getHeight() - PongBall.SIZEY * 2;
 		}
