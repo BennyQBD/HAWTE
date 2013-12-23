@@ -30,11 +30,24 @@ public class RPGGridComponent extends GameComponent
 		super.init(parent);
 	}
 
+	public void bindColor(Graphics g)
+	{
+		g.setColor(color);
+	}
+
+	public Vector2d getGridCornerPos()
+	{
+		RPGGridObject object = getGameObject();
+		Vector2d pos = object.getTransform().getCornerPos();
+		pos.addEq(object.getX() * RPGGrid.GRID_SPACE_SIZE, object.getY() * RPGGrid.GRID_SPACE_SIZE);
+		return pos;
+	}
+
 	@Override
 	public void render(Graphics g)
 	{
-		Vector2d pos = getGameObject().getTransform().getCornerPos();
-		g.setColor(color);
+		Vector2d pos = getGridCornerPos();
+		bindColor(g);
 		g.fillRect((int) pos.getX(), (int) pos.getY(), RPGGrid.GRID_SPACE_SIZE, RPGGrid.GRID_SPACE_SIZE);
 	}
 }
