@@ -90,23 +90,13 @@ public class RPGGrid extends GameObject
 	public void render(Graphics g)
 	{
 		super.render(g);
-		Vector2d posOffset = new Vector2d(0,0);
 
 		for(RPGGridObject[] xArray : gridObjects)
 		{
 			for(RPGGridObject gridObject : xArray)
 			{
 				if(gridObject == null) continue;
-
-				Transform transform = gridObject.getTransform();
-				Vector2d oldGameObjectPos = transform.getPos();
-
-				posOffset.set(gridObject.getX() * GRID_SPACE_SIZE, gridObject.getY() * GRID_SPACE_SIZE);
-				transform.setPos(oldGameObjectPos.add(posOffset));
-
 				gridObject.render(g);
-
-				transform.setPos(oldGameObjectPos);
 			}
 		}
 	}

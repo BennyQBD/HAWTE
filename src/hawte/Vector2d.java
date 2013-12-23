@@ -33,6 +33,8 @@ public class Vector2d
 	public Vector2d div(double r) { return new Vector2d(x / r, y / r); }
 	public Vector2d abs() { return new Vector2d(Math.abs(x), Math.abs(y)); }
 
+	public void addEq(double x, double y) { this.x += x; this.y += y; }
+
 	public Vector2d(Vector2d init)
 	{
 		this.x = init.getX();
@@ -127,7 +129,7 @@ public class Vector2d
 
 	public Vector2d lerp(Vector2d newVector, double amt)
 	{
-		return this.sub(newVector).mul(amt).add(newVector);
+		return newVector.sub(this).mul(amt).add(this);
 	}
 
 	@Override
