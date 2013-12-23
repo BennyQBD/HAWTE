@@ -1,5 +1,6 @@
 package game;
 
+import game.RPG.RPGGame;
 import game.pong.Pong;
 import hawte.GameEngine;
 
@@ -12,7 +13,7 @@ import java.awt.*;
 public class Main extends Applet
 {
 	private static final long serialVersionUID = 1L;
-	private static GameEngine gameEngine = new GameEngine(800, 600, 60, new Pong());
+	private static GameEngine gameEngine = new GameEngine(800, 600, 60, new RPGGame());
 
 	public void init()
 	{
@@ -32,7 +33,7 @@ public class Main extends Applet
 
 	public static void main(String[] args)
 	{
-		gameEngine.createWindow("Pong");
+		gameEngine.createWindow("RPG");
 		gameEngine.start();
 	}
 }

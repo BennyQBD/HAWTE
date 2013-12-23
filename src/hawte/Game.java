@@ -52,7 +52,6 @@ public abstract class Game
 	{
 		rootObject.update(delta);
 
-		//TODO: Make this take into account all children
 		//Update physics simulation. Possibly move this to other method/class
 		ArrayList<PhysicsComponent> physicsComponents = new ArrayList<PhysicsComponent>();
 
@@ -64,9 +63,9 @@ public abstract class Game
 			for(int j = i + 1; j < physicsComponents.size(); j++)
 			{
 				PhysicsComponent component2 = physicsComponents.get(j);
-
-//				if(component1 == component2)
-//					continue;
+				if(component1.getVelocity().lengthSquared() == 0 &&
+				   component2.getVelocity().lengthSquared() == 0)
+					continue;
 
 				Transform transform1 = component1.getGameObject().getTransform();
 				Transform transform2 = component2.getGameObject().getTransform();
