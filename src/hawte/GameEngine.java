@@ -7,12 +7,13 @@ import java.awt.image.BufferStrategy;
 /**
  * Handy Abstract Window Toolkit Engine primary class.
  */
-public class GameEngine extends Canvas
+public class GameEngine extends Canvas implements Runnable
 {
 	private boolean isRunning;
 	private double frameTime;
 	private Game game;
 	private Input input;
+	private Thread thread;
 
 	public GameEngine(int width, int height, int frameRate, Game game)
 	{
@@ -56,18 +57,25 @@ public class GameEngine extends Canvas
 		if(isRunning) return;
 
 		isRunning = true;
-		run();
+		thread = new Thread(this);
+		thread.start();
 	}
 
-//	public void stop()
-//	{
-//		if(!isRunning) return;
-//
-//		isRunning = false;
-//	}
-
-	private void run()
+	public void stop()
 	{
+		if(!isRunning) return;
+
+		isRunning = false;
+		try
+		{
+			thread.join();
+		}
+		catch(Exception ex){ex.printStackTrace();}
+	}
+
+	public void run()
+	{
+		isRunning = true;
 		double unprocessedSeconds = 0;
 		long lastTime = System.nanoTime();
 

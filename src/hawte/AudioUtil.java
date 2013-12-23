@@ -29,13 +29,17 @@ public class AudioUtil
 		clip.start();
 	}
 
-	public static Clip loadAudio(String fileName)
+	public static Clip loadAudio(String fileName, boolean isInJar)
 	{
 		Clip clip = null;
-
+		AudioInputStream stream;
 		try
 		{
-			AudioInputStream stream = AudioSystem.getAudioInputStream(new File(fileName));
+			if(!isInJar)
+				 stream = AudioSystem.getAudioInputStream(new File(fileName));
+			else
+				stream = AudioSystem.getAudioInputStream(AudioUtil.class.getResource(fileName.substring(1)));
+
 			clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, stream.getFormat()));
 			clip.open(stream);
 

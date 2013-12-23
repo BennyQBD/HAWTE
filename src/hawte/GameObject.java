@@ -208,13 +208,16 @@ public class GameObject
 		return token;
 	}
 
-	public void loadScene(String filePath)
+	public void loadScene(String filePath, boolean isInJar)
 	{
 		children.clear();
 		Scanner scan = null;
 		try
 		{
-			scan = new Scanner(new File(filePath));
+			if(!isInJar)
+				scan = new Scanner(new File(filePath));
+			else
+				scan = new Scanner(getClass().getResourceAsStream(filePath.substring(1)));
 
 			if(scan.hasNext() && scan.next().equals("go"))
 			{

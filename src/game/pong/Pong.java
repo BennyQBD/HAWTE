@@ -35,6 +35,6 @@ public class Pong extends Game
 //									  this).addComponent(new PongWall()));
 //		saveScene("./res/pong/main.scn");
 
-		loadScene("./res/pong/main.scn");
+		loadScene("./res/pong/main.scn", true);
 	}
 }

@@ -1,9 +1,7 @@
 package hawte;
 
 import java.awt.*;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * The primary game interface of HAWTE.
@@ -106,8 +104,8 @@ public abstract class Game
 		rootObject.saveScene(filePath);
 	}
 
-	public void loadScene(String filePath)
+	public void loadScene(String filePath, boolean isInJar)
 	{
-		rootObject.loadScene(filePath);
+		rootObject.loadScene(filePath, isInJar);
 	}
 }

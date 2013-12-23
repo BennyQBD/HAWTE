@@ -53,9 +53,9 @@ public class PongBall extends PongComponent
 	{
 		super.init(gameObject);
 		initialPosition = new Vector2d(getGameObject().getTransform().getPos());
-		hitPaddleSound = AudioUtil.loadAudio("./res/pong/beep.wav");
-		hitWallSound = AudioUtil.loadAudio("./res/pong/plop.wav");
-		resetSound = AudioUtil.loadAudio("./res/pong/peep.wav");
+		hitPaddleSound = AudioUtil.loadAudio("./res/pong/beep.wav", true);
+		hitWallSound = AudioUtil.loadAudio("./res/pong/plop.wav", true);
+		resetSound = AudioUtil.loadAudio("./res/pong/peep.wav", true);
 		initState(-1.0);
 		playerScore = 0;
 		enemyScore = 0;
