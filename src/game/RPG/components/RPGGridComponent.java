@@ -46,8 +46,12 @@ public class RPGGridComponent extends GameComponent
 	@Override
 	public void render(Graphics g)
 	{
-		Vector2d pos = getGridCornerPos();
+		drawAtGridPos(g, getGridCornerPos());
+	}
+
+	public void drawAtGridPos(Graphics g, Vector2d pos)
+	{
 		bindColor(g);
-		g.fillRect((int) pos.getX(), (int) pos.getY(), RPGGrid.GRID_SPACE_SIZE, RPGGrid.GRID_SPACE_SIZE);
+		getGameObject().fillOffsetRect(g, (int) pos.getX(), (int) pos.getY(), RPGGrid.GRID_SPACE_SIZE, RPGGrid.GRID_SPACE_SIZE);
 	}
 }

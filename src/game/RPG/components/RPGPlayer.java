@@ -1,6 +1,5 @@
 package game.RPG.components;
 
-import game.RPG.RPGGrid;
 import game.RPG.RPGGridObject;
 import hawte.Delay;
 import hawte.GameObject;
@@ -23,6 +22,7 @@ public class RPGPlayer extends RPGGridComponent
 	private Delay moveDelay;
 	private long lastMoveTime = 0;
 	private Vector2d startCornerPos;
+	private Vector2d displayPos;
 
 	@Override
 	public void init(GameObject parent)
@@ -30,6 +30,7 @@ public class RPGPlayer extends RPGGridComponent
 		super.init(parent);
 		setColor(Color.GREEN);
 		moveDelay = new Delay(MOVE_DELAY_MILLI);
+		displayPos = new Vector2d(0,0);
 	}
 
 	private void move(int x, int y)
@@ -70,25 +71,40 @@ public class RPGPlayer extends RPGGridComponent
 	{
 		RPGGridObject object = getGameObject();
 
-		if(object.getX() != newX)
-			object.setX(newX);
-		if(object.getY() != newY)
-			object.setY(newY);
+		if(object.getX() != newX || object.getY() != newY)
+		{
+			if(!getGameObject().getGrid().isBlocking(newX, newY))
+			{
+				object.setX(newX);
+				object.setY(newY);
+			}
+			else if(!getGameObject().getGrid().isBlocking(getGameObject().getX(), newY))
+				object.setY(newY);
+			else if(!getGameObject().getGrid().isBlocking(newX, getGameObject().getY()))
+				object.setX(newX);
+		}
+
+		calcDisplayPos();
+	}
+
+	private void calcDisplayPos()
+	{
+		long currentTime = System.nanoTime();
+		if(currentTime > (lastMoveTime + MOVE_DELAY_NANO))
+			displayPos = getGridCornerPos();
+		else
+		{
+			double lerpAmount = ((double)(currentTime - lastMoveTime))/((double) MOVE_DELAY_NANO);
+			displayPos = startCornerPos.lerp(getGridCornerPos(), lerpAmount);
+		}
+
+		Vector2d halfWindowSize = new Vector2d(getGameObject().getGame().getWidth() / 2, getGameObject().getGame().getHeight() / 2);
+		getGameObject().getGrid().getTransform().setPos(displayPos.mul(-1).add(halfWindowSize));
 	}
 
 	@Override
 	public void render(Graphics g)
 	{
-		long currentTime = System.nanoTime();
-		if(currentTime > (lastMoveTime + MOVE_DELAY_NANO))
-			super.render(g);
-		else
-		{
-			double lerpAmount = ((double)(currentTime - lastMoveTime))/((double) MOVE_DELAY_NANO);
-			Vector2d pos = startCornerPos.lerp(getGridCornerPos(), lerpAmount);
-
-			bindColor(g);
-			g.fillRect((int) pos.getX(), (int) pos.getY(), RPGGrid.GRID_SPACE_SIZE, RPGGrid.GRID_SPACE_SIZE);
-		}
+		drawAtGridPos(g, displayPos);
 	}
 }

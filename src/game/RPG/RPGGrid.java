@@ -4,6 +4,7 @@ import hawte.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * RPG Grid
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class RPGGrid extends GameObject
 {
 	public static final int GRID_SPACE_SIZE = 32;
-	private RPGGridObject[][] gridObjects;
+	private ArrayList<RPGGridObject>[][] gridObjects;
 
 	public int getSizeX() { return gridObjects.length; }
 	public int getSizeY() { return gridObjects[0].length; }
@@ -23,29 +24,36 @@ public class RPGGrid extends GameObject
 
 	public RPGGrid initGrid(int sizeX, int sizeY)
 	{
-		gridObjects = new RPGGridObject[sizeX][sizeY];
+		gridObjects = new ArrayList[sizeX][sizeY];
+		for(int i = 0; i < getSizeX(); i++)
+			for(int j = 0; j < getSizeY(); j++)
+				gridObjects[i][j] = new ArrayList<RPGGridObject>();
+
 		return this;
 	}
 
 	public void addToGrid(RPGGridObject object, int x, int y)
 	{
 		object.setParent(this, x, y);
-		gridObjects[x][y] = object;
+		gridObjects[x][y].add(object);
 	}
 
-	public void removeFromGrid(int x, int y)
+	public void removeFromGrid(RPGGridObject object, int x, int y)
 	{
-		gridObjects[x][y] = null;
+		gridObjects[x][y].remove(object);
 	}
 
-//	public Vector2d getObjectPos(RPGGridObject object)
-//	{
-//		for(int i = 0; i < gridObjects.length; i++)
-//			for(int j = 0; j < gridObjects[0].length; j++)
-//				if(gridObjects[i][j] == object) return new Vector2d(i, j);
-//
-//		return null;
-//	}
+	public boolean isBlocking(int x, int y)
+	{
+		if(x < 0 || x >= getSizeX() || y < 0 || y >= getSizeY())
+			return true;
+
+		for(RPGGridObject object : gridObjects[x][y])
+			if(object.isBlocking())
+				return true;
+
+		return false;
+	}
 
 	@Override
 	public void input(Input input)
@@ -54,12 +62,12 @@ public class RPGGrid extends GameObject
 
 		ArrayList<RPGGridObject> inputObjects = new ArrayList<RPGGridObject>();
 
-		for(RPGGridObject[] xArray : gridObjects)
+		for(ArrayList<RPGGridObject>[] xArray : gridObjects)
 		{
-			for(RPGGridObject gridObject : xArray)
+			for(ArrayList<RPGGridObject> gridObjectArrayList : xArray)
 			{
-				if(gridObject == null) continue;
-				inputObjects.add(gridObject);
+				for(RPGGridObject gridObject : gridObjectArrayList)
+					inputObjects.add(gridObject);
 			}
 		}
 
@@ -73,12 +81,12 @@ public class RPGGrid extends GameObject
 		super.update(delta);
 		ArrayList<RPGGridObject> updateObjects = new ArrayList<RPGGridObject>();
 
-		for(RPGGridObject[] xArray : gridObjects)
+		for(ArrayList<RPGGridObject>[] xArray : gridObjects)
 		{
-			for(RPGGridObject gridObject : xArray)
+			for(ArrayList<RPGGridObject> gridObjectArrayList : xArray)
 			{
-				if(gridObject == null) continue;
-				updateObjects.add(gridObject);
+				for(RPGGridObject gridObject : gridObjectArrayList)
+					updateObjects.add(gridObject);
 			}
 		}
 
@@ -91,13 +99,19 @@ public class RPGGrid extends GameObject
 	{
 		super.render(g);
 
-		for(RPGGridObject[] xArray : gridObjects)
+		ArrayList<RPGGridObject> objects = new ArrayList<RPGGridObject>();
+
+		for(ArrayList<RPGGridObject>[] xArray : gridObjects)
+			for(ArrayList<RPGGridObject> gridObjectArrayList : xArray)
+				for(RPGGridObject gridObject : gridObjectArrayList)
+					objects.add(gridObject);
+
+		Collections.sort(objects);
+
+		for(RPGGridObject gridObject : objects)
 		{
-			for(RPGGridObject gridObject : xArray)
-			{
-				if(gridObject == null) continue;
-				gridObject.render(g);
-			}
+			gridObject.setRenderOffset(getTransform().getPos());
+			gridObject.render(g);
 		}
 	}
 }
