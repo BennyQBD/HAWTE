@@ -2,6 +2,8 @@ package hawte;
 
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -110,7 +112,7 @@ public class GameObject
 
 	public void addToStringList(ArrayList<String> outputStrings)
 	{
-		outputStrings.add("go " + getTransform().toString());
+		outputStrings.add("go " + getClass().getCanonicalName() + " " + getTransform().toString());
 
 		for(int i = 0; i < getNumComponents(); i++)
 			outputStrings.add("cmp " + getComponent(i).getClass().getCanonicalName());
@@ -141,7 +143,8 @@ public class GameObject
 		}
 		finally
 		{
-			out.close();
+			if(out != null)
+				out.close();
 		}
 	}
 
@@ -161,7 +164,27 @@ public class GameObject
 
 		while(token.equals("go"))
 		{
-			GameObject child = new GameObject(new Transform(), object.getGame());
+			token = scan.next();
+
+			GameObject child = null;
+
+			try
+			{
+				Class<?> gameObjectClass = Class.forName(token);
+				Constructor<?> ctor = gameObjectClass.getConstructor(Transform.class, Game.class);
+				child = (GameObject)ctor.newInstance(new Transform(), object.getGame());
+			}
+			catch(NoSuchMethodException e)
+			{
+				e.printStackTrace();
+			}
+			catch(InvocationTargetException e)
+			{
+				e.printStackTrace();
+			}
+
+
+			//GameObject child = new GameObject(new Transform(), object.getGame());
 			token = loadGameObject(child, scan);
 			object.addChild(child);
 		}
@@ -223,6 +246,7 @@ public class GameObject
 			{
 				try
 				{
+					scan.next();
 					loadGameObject(this, scan);
 				}
 				catch(IllegalAccessException e)
