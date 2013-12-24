@@ -48,8 +48,7 @@ public class RPGGridObject extends GameObject implements Comparable
 		if(x < 0 || x >= grid.getSizeX())
 			return;
 
-		grid.removeFromGrid(this, this.x, this.y);
-		grid.addToGrid(this, x, y);
+		grid.moveObject(this, this.x, this.y, x, y);
 	}
 
 	public void setY(int y)
@@ -57,8 +56,7 @@ public class RPGGridObject extends GameObject implements Comparable
 		if(y < 0 || y >= grid.getSizeY())
 			return;
 
-		grid.removeFromGrid(this, this.x, this.y);
-		grid.addToGrid(this, x, y);
+		grid.moveObject(this, this.x, this.y, x, y);
 	}
 
 	public void fillOffsetRect(Graphics g, int x, int y, int width, int height)

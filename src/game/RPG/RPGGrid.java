@@ -13,6 +13,8 @@ public class RPGGrid extends GameObject
 {
 	public static final int GRID_SPACE_SIZE = 32;
 	private ArrayList<RPGGridObject>[][] gridObjects;
+	private ArrayList<RPGGridObject> allGridObjects;
+	private boolean needsSorting;
 
 	public int getSizeX() { return gridObjects.length; }
 	public int getSizeY() { return gridObjects[0].length; }
@@ -24,7 +26,9 @@ public class RPGGrid extends GameObject
 
 	public RPGGrid initGrid(int sizeX, int sizeY)
 	{
+		allGridObjects = new ArrayList<RPGGridObject>();
 		gridObjects = new ArrayList[sizeX][sizeY];
+		needsSorting = false;
 		for(int i = 0; i < getSizeX(); i++)
 			for(int j = 0; j < getSizeY(); j++)
 				gridObjects[i][j] = new ArrayList<RPGGridObject>();
@@ -32,15 +36,19 @@ public class RPGGrid extends GameObject
 		return this;
 	}
 
+	public void moveObject(RPGGridObject object, int startX, int startY, int destX, int destY)
+	{
+		gridObjects[startX][startY].remove(object);
+		gridObjects[destX][destY].add(object);
+		object.setParent(this, destX, destY);
+	}
+
 	public void addToGrid(RPGGridObject object, int x, int y)
 	{
 		object.setParent(this, x, y);
 		gridObjects[x][y].add(object);
-	}
-
-	public void removeFromGrid(RPGGridObject object, int x, int y)
-	{
-		gridObjects[x][y].remove(object);
+		allGridObjects.add(object);
+		needsSorting = true;
 	}
 
 	public boolean isBlocking(int x, int y)
@@ -60,18 +68,7 @@ public class RPGGrid extends GameObject
 	{
 		super.input(input);
 
-		ArrayList<RPGGridObject> inputObjects = new ArrayList<RPGGridObject>();
-
-		for(ArrayList<RPGGridObject>[] xArray : gridObjects)
-		{
-			for(ArrayList<RPGGridObject> gridObjectArrayList : xArray)
-			{
-				for(RPGGridObject gridObject : gridObjectArrayList)
-					inputObjects.add(gridObject);
-			}
-		}
-
-		for(RPGGridObject object : inputObjects)
+		for(RPGGridObject object : allGridObjects)
 			object.input(input);
 	}
 
@@ -79,18 +76,8 @@ public class RPGGrid extends GameObject
 	public void update(double delta)
 	{
 		super.update(delta);
-		ArrayList<RPGGridObject> updateObjects = new ArrayList<RPGGridObject>();
 
-		for(ArrayList<RPGGridObject>[] xArray : gridObjects)
-		{
-			for(ArrayList<RPGGridObject> gridObjectArrayList : xArray)
-			{
-				for(RPGGridObject gridObject : gridObjectArrayList)
-					updateObjects.add(gridObject);
-			}
-		}
-
-		for(RPGGridObject object : updateObjects)
+		for(RPGGridObject object : allGridObjects)
 			object.update(delta);
 	}
 
@@ -99,16 +86,13 @@ public class RPGGrid extends GameObject
 	{
 		super.render(g);
 
-		ArrayList<RPGGridObject> objects = new ArrayList<RPGGridObject>();
+		if(needsSorting)
+		{
+			Collections.sort(allGridObjects);
+			needsSorting = false;
+		}
 
-		for(ArrayList<RPGGridObject>[] xArray : gridObjects)
-			for(ArrayList<RPGGridObject> gridObjectArrayList : xArray)
-				for(RPGGridObject gridObject : gridObjectArrayList)
-					objects.add(gridObject);
-
-		Collections.sort(objects);
-
-		for(RPGGridObject gridObject : objects)
+		for(RPGGridObject gridObject : allGridObjects)
 		{
 			gridObject.setRenderOffset(getTransform().getPos());
 			gridObject.render(g);
