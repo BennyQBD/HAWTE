@@ -12,6 +12,7 @@ import java.util.Collections;
 public class RPGGrid extends GameObject
 {
 	public static final int GRID_SPACE_SIZE = 32;
+	//public static final int INITIAL_SPACE_CAPACITY = 2;
 	private ArrayList<RPGGridObject>[][] gridObjects;
 	private ArrayList<RPGGridObject> allGridObjects;
 	private boolean needsSorting;
@@ -70,6 +71,9 @@ public class RPGGrid extends GameObject
 
 		for(RPGGridObject object : allGridObjects)
 			object.input(input);
+
+//		for(int i = 0; i < allGridObjects.size(); i++)
+//			allGridObjects.get(i).input(input);
 	}
 
 	@Override
@@ -79,6 +83,9 @@ public class RPGGrid extends GameObject
 
 		for(RPGGridObject object : allGridObjects)
 			object.update(delta);
+
+//		for(int i = 0; i < allGridObjects.size(); i++)
+//			allGridObjects.get(i).update(delta);
 	}
 
 	@Override
@@ -97,5 +104,11 @@ public class RPGGrid extends GameObject
 			gridObject.setRenderOffset(getTransform().getPos());
 			gridObject.render(g);
 		}
+
+//		for(int i = 0; i < allGridObjects.size(); i++)
+//		{
+//			allGridObjects.get(i).setRenderOffset(getTransform().getPos());
+//			allGridObjects.get(i).render(g);
+//		}
 	}
 }
