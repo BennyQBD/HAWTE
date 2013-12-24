@@ -61,7 +61,10 @@ public class RPGGridObject extends GameObject implements Comparable
 
 	public void fillOffsetRect(Graphics g, int x, int y, int width, int height)
 	{
-		g.fillRect((int)(x + renderOffset.getX()), (int)(y + renderOffset.getY()), width, height);
+		int offsetX = (int)(x + renderOffset.getX());
+		int offsetY = (int)(y + renderOffset.getY());
+		if(offsetX + width > 0 && offsetY + height > 0 && offsetX < getGame().getWidth() && offsetY < getGame().getHeight())
+			g.fillRect(offsetX, offsetY, width, height);
 	}
 
 	@Override

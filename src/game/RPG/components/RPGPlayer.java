@@ -8,6 +8,7 @@ import hawte.Vector2d;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 /**
  * RPG Player
@@ -16,21 +17,34 @@ public class RPGPlayer extends RPGGridComponent
 {
 	public static final int MOVE_DELAY_MILLI = 200;
 	public static final int MOVE_DELAY_NANO = MOVE_DELAY_MILLI * 1000000;
+	public static final int MIN_STEPS_TO_RANDOM_BATTLE = 8;
+	public static final int RANDOM_BATTLE_CHANCE = 32;
 	private int newX = 0;
 	private int newY = 0;
 	private boolean moved = false;
+	private boolean triedRandomBattle = true;
+	private boolean lastMoveSucceeded = false;
 	private Delay moveDelay;
 	private long lastMoveTime = 0;
 	private Vector2d startCornerPos;
 	private Vector2d displayPos;
+	private Random rand;
+	private int numStepsToRandomBattle = 0;
 
 	@Override
 	public void init(GameObject parent)
 	{
 		super.init(parent);
-		setColor(Color.GREEN);
+		setColor(Color.RED);
 		moveDelay = new Delay(MOVE_DELAY_MILLI);
 		displayPos = new Vector2d(0,0);
+		rand = new Random();
+		calcStepsToRandomBattle();
+	}
+
+	private void calcStepsToRandomBattle()
+	{
+		numStepsToRandomBattle = rand.nextInt(RANDOM_BATTLE_CHANCE) + MIN_STEPS_TO_RANDOM_BATTLE;
 	}
 
 	private void move(int x, int y)
@@ -41,6 +55,7 @@ public class RPGPlayer extends RPGGridComponent
 			newY += y;
 			newX += x;
 			moved = true;
+			triedRandomBattle = false;
 			startCornerPos = getGridCornerPos();
 		}
 	}
@@ -64,6 +79,31 @@ public class RPGPlayer extends RPGGridComponent
 
 		if(moved && moveDelay.isOver())
 			moveDelay.restart();
+
+
+	}
+
+	private boolean moveIfNotBlocking(int x, int y)
+	{
+		if(getGameObject().getGrid().isBlocking(x, y) || (x == getGameObject().getX() && y == getGameObject().getY()))
+			return false;
+
+		getGameObject().setX(x);
+		getGameObject().setY(y);
+
+		return true;
+	}
+
+	private void checkRandomBattle()
+	{
+		if(--numStepsToRandomBattle == 0)
+		{
+			//TODO: Actual random battle
+			System.out.println("Random battle!");
+			calcStepsToRandomBattle();
+		}
+
+		triedRandomBattle = true;
 	}
 
 	@Override
@@ -73,18 +113,18 @@ public class RPGPlayer extends RPGGridComponent
 
 		if(object.getX() != newX || object.getY() != newY)
 		{
-			if(!getGameObject().getGrid().isBlocking(newX, newY))
-			{
-				object.setX(newX);
-				object.setY(newY);
-			}
-			else if(!getGameObject().getGrid().isBlocking(getGameObject().getX(), newY))
-				object.setY(newY);
-			else if(!getGameObject().getGrid().isBlocking(newX, getGameObject().getY()))
-				object.setX(newX);
+			lastMoveSucceeded = moveIfNotBlocking(newX, newY);
+
+			if(!lastMoveSucceeded)
+				lastMoveSucceeded = moveIfNotBlocking(object.getX(), newY);
+			if(!lastMoveSucceeded)
+				lastMoveSucceeded = moveIfNotBlocking(newX, object.getY());
 		}
 
 		calcDisplayPos();
+
+		if(!triedRandomBattle && lastMoveSucceeded && moveDelay.isOver())
+			checkRandomBattle();
 	}
 
 	private void calcDisplayPos()
