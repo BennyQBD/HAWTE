@@ -70,6 +70,11 @@ public class GameObject
 		children.add(object);
 	}
 
+	public void removeChild(GameObject object)
+	{
+		children.remove(object);
+	}
+
 //	public GameObject(Transform transform, GameComponent component, Game game)
 //	{
 //		components = new ArrayList<GameComponent>();

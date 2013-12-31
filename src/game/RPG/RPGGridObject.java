@@ -29,6 +29,7 @@ public class RPGGridObject extends GameObject implements Comparable
 	public RPGGridObject(Transform transform, Game game)
 	{
 		super(transform, game);
+		renderOffset = new Vector2d(0.0, 0.0);
 	}
 
 	@Override

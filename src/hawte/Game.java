@@ -9,7 +9,8 @@ import java.util.ArrayList;
  */
 public abstract class Game
 {
-	//private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	private ArrayList<GameObject> objectsToBeAdded = new ArrayList<GameObject>();
+	private ArrayList<GameObject> objectsToBeRemoved = new ArrayList<GameObject>();
 	private GameObject rootObject = new GameObject(new Transform(new Vector2d(0,0), new Vector2d(0,0), 0), this);
 	private int width;
 	private int height;
@@ -26,6 +27,14 @@ public abstract class Game
 
 	public void input(Input input)
 	{
+		for(GameObject object : objectsToBeAdded)
+			rootObject.addChild(object);
+		objectsToBeAdded.clear();
+
+		for(GameObject object : objectsToBeRemoved)
+			rootObject.removeChild(object);
+		objectsToBeRemoved.clear();
+
 		rootObject.input(input);
 	}
 
@@ -95,7 +104,12 @@ public abstract class Game
 
 	public void addObject(GameObject object)
 	{
-		rootObject.addChild(object);
+		objectsToBeAdded.add(object);
+	}
+
+	public void removeObject(GameObject object)
+	{
+		objectsToBeRemoved.add(object);
 	}
 
 	public void saveScene(String filePath)

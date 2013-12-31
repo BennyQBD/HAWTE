@@ -15,7 +15,11 @@ public class RPGGridComponent extends GameComponent
 {
 	private Color color = Color.WHITE;
 
-	public void setColor(Color color) { this.color = color; }
+	public RPGGridComponent setColor(Color color)
+	{
+		this.color = color;
+		return this;
+	}
 
 	@Override
 	public RPGGridObject getGameObject()

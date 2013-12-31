@@ -1,10 +1,7 @@
 package game.RPG.components;
 
 import game.RPG.RPGGridObject;
-import hawte.Delay;
-import hawte.GameObject;
-import hawte.Input;
-import hawte.Vector2d;
+import hawte.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,8 +14,8 @@ public class RPGPlayer extends RPGGridComponent
 {
 	public static final int MOVE_DELAY_MILLI = 200;
 	public static final int MOVE_DELAY_NANO = MOVE_DELAY_MILLI * 1000000;
-	public static final int MIN_STEPS_TO_RANDOM_BATTLE = 8;
-	public static final int RANDOM_BATTLE_CHANCE = 32;
+	public static final int MIN_STEPS_TO_RANDOM_BATTLE = 1;//8;
+	public static final int RANDOM_BATTLE_CHANCE = 1;//32;
 	private int newX = 0;
 	private int newY = 0;
 	private boolean moved = false;
@@ -98,8 +95,17 @@ public class RPGPlayer extends RPGGridComponent
 	{
 		if(--numStepsToRandomBattle == 0)
 		{
+			Game game = getGameObject().getGame();
+
 			//TODO: Actual random battle
-			System.out.println("Random battle!");
+			RPGBattle battle = new RPGBattle();
+			game.addObject(new RPGGridObject(new Transform(), game).addComponent(battle));
+			battle.addBattleCharacter(new RPGBattleCharacter().setColor(Color.RED));
+			battle.addBattleCharacter(new RPGBattleCharacter().setColor(Color.CYAN));
+
+
+			game.removeObject(getGameObject().getGrid());
+			//System.out.println("Random battle!");
 			calcStepsToRandomBattle();
 		}
 
